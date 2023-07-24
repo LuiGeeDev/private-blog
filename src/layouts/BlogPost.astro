@@ -4,28 +4,16 @@ import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import FormattedDate from "../components/FormattedDate.astro";
+import Icon from "../components/Icon.astro";
 
 type Props = CollectionEntry<"blog">["data"];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, preview, tags } = Astro.props;
 ---
 
-<html lang="en">
+<html lang="ko">
   <head>
     <BaseHead title={title} description={description} />
-    <style>
-      .title {
-        font-size: 2em;
-        margin: 0.25em 0 0;
-      }
-      hr {
-        border-top: 1px solid #ddd;
-        margin: 1rem 0;
-      }
-      .last-updated-on {
-        font-style: italic;
-      }
-    </style>
     <style is:global>
       @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/variable/pretendardvariable-dynamic-subset.css");
     </style>
@@ -33,19 +21,35 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 
   <body>
     <Header />
-    <main>
-      <article>
-        {heroImage && <img width={720} height={360} src={heroImage} alt="" />}
-        <h1 class="title">{title}</h1>
-        <FormattedDate date={pubDate} />
+    <main class="max-w-[1024px] mx-auto grid grid-cols-12">
+      <article class="col-span-8 lg:col-start-2">
         {
-          updatedDate && (
-            <div class="last-updated-on">
-              Last updated on <FormattedDate date={updatedDate} />
-            </div>
+          preview && (
+            <img
+              class="mb-5 rounded"
+              width={720}
+              height={360}
+              src={preview}
+              alt=""
+            />
           )
         }
-        <hr />
+        <div class="flex gap-2 mb-2">
+          {
+            tags.map((tag) => (
+              <div class="px-2 py-1 text-xs border rounded text-blue-600 border-blue-600">
+                {tag}
+              </div>
+            ))
+          }
+        </div>
+        <h1 class="text-4xl font-semibold text-gray-800 mb-4">{title}</h1>
+        <div class="flex gap-2 mb-12">
+          <span class="flex items-center gap-1 text-xs text-gray-400">
+            <Icon name="calendar-days-mini" />
+            <FormattedDate date={pubDate} />
+          </span>
+        </div>
         <slot />
       </article>
     </main>
